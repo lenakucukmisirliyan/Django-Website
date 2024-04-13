@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <style>
+        .small-product-image {
+            max-width: 200px;
+            max-height: 200px;
+        }
+        .card {
+            border: 10px solid rgba(0, 0, 0, 0.125);
+            width: 380px;
+            height: 380px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .card-body {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+        }
+        img {
+            align-items: center;
+        }
+    </style>
+
+    <div class="row">
+        {% for product in products %}
+            <div class="col-md-4 col-sm-6">
+                <div class="card mb-4 shadow-sm">
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid small-product-image">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text">Price: {{ product.price }} TL</p>
+                        <form action="{% url 'add_to_cart' product.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary">Add to Cart</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% if forloop.counter|divisibleby:3 and not forloop.last %}
+                </div><div class="row">
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endblock %}

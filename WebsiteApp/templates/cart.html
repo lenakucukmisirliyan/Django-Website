@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load multiply %}
+
+{% block content %}
+    <h1 class="mb-4">Your Cart</h1>
+    {% if cart_items %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for item in cart_items %}
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ item.product.name }}</h5>
+                            <p class="card-text">Price: {{ item.product.price }} TL</p>
+                            <p class="card-text">Quantity: {{ item.quantity }}</p>
+                            <p class="card-text">Total: {{ item.product.price|multiply:item.quantity }} TL</p>
+                            <form action="{% url 'remove_from_cart' item.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger btn-sm">Remove Item</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <p class="mt-4">Total Amount: {{ total_price }} TL</p>
+        <form action="{% url 'clear_cart' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Delete All</button>
+        </form>
+    {% else %}
+        <p>Cart is empty</p>
+    {% endif %}
+{% endblock %}
